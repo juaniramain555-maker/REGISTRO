@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Registro</title>
+  </head>
+  <body>
+    <header>
+        <h1>Registro de Usuario</h1>
+    </header>
+    <main>
+      <form onsubmit="registrarUsuario(event)">
+        <label
+          >nombre:
+          <input type="text" id="nombre" required />
+        </label>
+
+        <label>edad: <input type="number" id="edad" required /></label>
+
+        <label>correo: <input type="email" id="email" required /></label>
+
+        <label
+          >contraseña: <input type="password" id="password" required
+        /></label>
+
+        <label
+          >confirmar contraseña:
+          <input type="password" id="confirmarPassword" required
+        /></label>
+        <button type="submit">Registrar</button>
+      </form>
+    </main>
+    <footer>
+      <p>&copy; 2026 Mi Sitio Web. Todos los derechos reservados.</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+body{
+    background-color: lightseagreen;
+}
+form{
+    font-family: Arial, sans-serif;
+    font: 1em sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    gap: 20px;
+}
+button{
+    background-color: lightblue;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
