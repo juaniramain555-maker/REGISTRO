@@ -7,49 +7,95 @@ const passwordInput = document.getElementById("password");
 const confirmarPasswordInput = document.getElementById("confirmarPassword");
 
 const registrarUsuario = (event) => {
+
   event.preventDefault();
-  const nombre = nombreInput.value;
-  const email = emailInput.value;
-  const edad = edadInput.value;
+
+  const nombre = nombreInput.value.trim();
+  const email = emailInput.value.trim().toLowerCase();
+  const edad = Number(edadInput.value);
   const password = passwordInput.value;
   const confirmarPassword = confirmarPasswordInput.value;
-  console.log("Nombre:", nombre);
-  console.log("email:", email);
-  console.log("Edad:", edad);
-  console.log("Contraseña:", password);
-  console.log("Confirmar Contraseña:", confirmarPassword);
+
+  const mensajeError = document.getElementById("mensaje-error");
+
+  mensajeError.textContent = "";
 
   const edadAceptada = 18;
 
-  if (password !== confirmarPassword) {
-    alert("Las contraseñas no coinciden");
+  // Validar que las contraseñas coincidan
+ 
+  if (password.length < 8) {
+    mensajeError.textContent = "La contraseña debe tener al menos 8 caracteres";
     return;
-  }
-  
+}
+
+if (password !== confirmarPassword) {
+    mensajeError.textContent = "Las contraseñas no coinciden";
+    return;
+}
+ 
+
+  // Validar la edad
   if (edad < edadAceptada) {
-    alert("Debes ser mayor de 18 años para registrarte");
+    mensajeError.textContent =
+      "Debes ser mayor de 18 años para registrarte";
     return;
   }
-  localStorage.setItem("emailUsuario",email);
+
+  // Obtener los usuarios guardados
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  // Comprobar si el email ya existe
+  const emailExiste = usuarios.some(function (usuario) {
+    return usuario.email === email;
+  });
+
+  if (emailExiste) {
+    mensajeError.textContent = "Este email ya está en uso";
+    return;
+  }
+
+  // Crear el nuevo usuario
+  const nuevoUsuario = {
+    nombre: nombre,
+    email: email,
+    edad: edad
+  };
+
+  // Agregar el usuario al array
+  usuarios.push(nuevoUsuario);
+
+  // Guardar todos los usuarios
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+  // Guardar el email de la sesión actual
+  localStorage.setItem("emailUsuario", email);
+
+  // Ir a la página de bienvenida
   window.location.href = "bienvenida.html";
 };
- 
+
+
+// Comprobar si ya hay una sesión iniciada
 const validarRegistro = () => {
+
   const userRegistrado = localStorage.getItem("emailUsuario");
+
   if (userRegistrado) {
     window.location.href = "bienvenida.html";
   }
+};
+
+
+if (!window.location.pathname.endsWith("bienvenida.html")) {
+  validarRegistro();
 }
-if (window.location.pathname !== "/bienvenida.html") {
 
-    validarRegistro()
 
-}
-
+// Cerrar sesión sin borrar los usuarios registrados
 const logout = () => {
 
-    localStorage.clear();
+  localStorage.removeItem("emailUsuario");
 
-    window.location.href="index.html";
-
-}
+  window.location.href = "index.html";
+};

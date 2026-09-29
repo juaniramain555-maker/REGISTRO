@@ -1,20 +1,145 @@
-body{
-    background-color: lightseagreen;
+* {
+    box-sizing: border-box;
 }
-form{
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c7744);
+
     font-family: Arial, sans-serif;
-    font: 1em sans-serif;
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 50%;
-    gap: 20px;
 }
-button{
-    background-color: lightblue;
+
+/* Título */
+
+h1 {
+    margin-top: 25px;
+    margin-bottom: 8px;
+
+    color: white;
+
+    font-size: 32px;
+}
+
+/* Texto debajo del título */
+
+.descripcion {
+    margin-top: 0;
+    margin-bottom: 25px;
+
+    color: #d6d6d6;
+
+    font-size: 16px;
+}
+
+/* Tarjeta del formulario */
+
+.contenedor {
+    width: 90%;
+    max-width: 450px;
+
+    padding: 30px;
+
+    background-color: rgba(0, 0, 0, 0.45);
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* Cada campo */
+
+.campo {
+    margin-bottom: 20px;
+}
+
+/* Etiquetas */
+
+label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+/* Inputs */
+
+input {
+    width: 100%;
+
+    padding: 10px;
+
+    border: 1px solid #aaa;
+    border-radius: 7px;
+
+    font-size: 16px;
+}
+
+/* Input seleccionado */
+
+input:focus {
+    outline: none;
+
+    border: 2px solid #20aaa5;
+}
+
+/* Botón */
+
+button {
+    width: 100%;
+
+    padding: 12px;
+
+    margin-top: 5px;
+
     border: none;
-    padding: 10px 20px;
-    font-size: 1em;
+    border-radius: 7px;
+
+    background-color: #20aaa5;
+    color: white;
+
+    font-size: 17px;
+
     cursor: pointer;
+
+    transition: 0.3s;
+}
+
+/* Efecto al pasar el mouse */
+
+button:hover {
+    background-color: #168681;
+
+    transform: scale(1.03);
+}
+
+/* Footer */
+
+footer {
+    margin-top: auto;
+
+    padding: 20px;
+
+    color: white;
+
+    text-align: center;
+}
+
+.boton-logout {
+    width: 200px;
+}
+
+#mensaje-error {
+    color: #ff6b6b;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
 }
