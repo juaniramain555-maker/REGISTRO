@@ -12,7 +12,7 @@
     <link rel="icon" type="image/svg+xml" href="image/favicon.svg" />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="pagina pagina-registro">
+  <body>
     <header class="cabecera-sitio">
       <a class="marca" href="index.html" aria-label="Registro, página de inicio">
         <span class="marca-icono" aria-hidden="true">R</span>
@@ -22,7 +22,7 @@
 
     <main class="contenido-principal">
       <section class="seccion-registro" aria-labelledby="titulo-registro">
-        <article class="tarjeta tarjeta-registro">
+        <article class="tarjeta">
           <header class="cabecera-tarjeta">
             <p class="etiqueta-seccion">CREA TU PERFIL</p>
             <h1 class="titulo-principal" id="titulo-registro">Crear cuenta</h1>
@@ -32,14 +32,19 @@
             </p>
           </header>
 
-          <form class="formulario" id="formulario-registro">
-            <p
+          <form class="formulario" id="formulario-registro" novalidate>
+            <div
               class="mensaje-error"
               id="mensaje-error"
               role="alert"
               aria-live="assertive"
+              aria-atomic="true"
               tabindex="-1"
-            ></p>
+              hidden
+            >
+              <p>Revisa los siguientes puntos:</p>
+              <ul id="lista-errores"></ul>
+            </div>
 
             <div class="campo">
               <label class="etiqueta-campo" for="nombre">Nombre completo</label>
@@ -51,9 +56,15 @@
                 placeholder="Ej. Carlos Mendoza"
                 autocomplete="name"
                 minlength="3"
-                aria-describedby="mensaje-error"
+                aria-describedby="error-nombre"
                 required
               />
+              <span
+                class="mensaje-campo-error"
+                id="error-nombre"
+                aria-live="polite"
+                hidden
+              ></span>
             </div>
 
             <div class="campo">
@@ -67,9 +78,15 @@
                 min="0"
                 max="120"
                 inputmode="numeric"
-                aria-describedby="mensaje-error"
+                aria-describedby="error-edad"
                 required
               />
+              <span
+                class="mensaje-campo-error"
+                id="error-edad"
+                aria-live="polite"
+                hidden
+              ></span>
             </div>
 
             <div class="campo">
@@ -81,9 +98,15 @@
                 name="email"
                 placeholder="nombre@ejemplo.com"
                 autocomplete="email"
-                aria-describedby="mensaje-error"
+                aria-describedby="error-email"
                 required
               />
+              <span
+                class="mensaje-campo-error"
+                id="error-email"
+                aria-live="polite"
+                hidden
+              ></span>
             </div>
 
             <div class="campo">
@@ -96,9 +119,15 @@
                 placeholder="Al menos 8 caracteres"
                 autocomplete="new-password"
                 minlength="8"
-                aria-describedby="mensaje-error"
+                aria-describedby="error-password"
                 required
               />
+              <span
+                class="mensaje-campo-error"
+                id="error-password"
+                aria-live="polite"
+                hidden
+              ></span>
             </div>
 
             <div class="campo">
@@ -113,9 +142,15 @@
                 placeholder="Repite tu contraseña"
                 autocomplete="new-password"
                 minlength="8"
-                aria-describedby="mensaje-error"
+                aria-describedby="error-confirmar-password"
                 required
               />
+              <span
+                class="mensaje-campo-error"
+                id="error-confirmar-password"
+                aria-live="polite"
+                hidden
+              ></span>
             </div>
 
             <button

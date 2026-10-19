@@ -6,16 +6,154 @@ const entradaConfirmarContraseña = document.getElementById("confirmarPassword")
 const formularioRegistro = document.getElementById("formulario-registro");
 const botonCerrarSesion = document.getElementById("boton-cerrar-sesion");
 const paginaBienvenida = window.location.pathname.endsWith("bienvenida.html");
+const camposTocados = new Set();
+const camposRegistro = [
+  {
+    elemento: entradaNombre,
+    mensaje: document.getElementById("error-nombre"),
+    etiqueta: "Nombre"
+  },
+  {
+    elemento: entradaEdad,
+    mensaje: document.getElementById("error-edad"),
+    etiqueta: "Edad"
+  },
+  {
+    elemento: entradaCorreo,
+    mensaje: document.getElementById("error-email"),
+    etiqueta: "Correo electrónico"
+  },
+  {
+    elemento: entradaContraseña,
+    mensaje: document.getElementById("error-password"),
+    etiqueta: "Contraseña"
+  },
+  {
+    elemento: entradaConfirmarContraseña,
+    mensaje: document.getElementById("error-confirmar-password"),
+    etiqueta: "Confirmación de contraseña"
+  }
+];
 
-const mostrarErrorRegistro = (mensaje) => {
+const ocultarResumenErrores = () => {
   const mensajeError = document.getElementById("mensaje-error");
+  const listaErrores = document.getElementById("lista-errores");
 
-  if (!mensajeError) {
+  if (!mensajeError || !listaErrores) {
     return;
   }
 
-  mensajeError.textContent = mensaje;
-  mensajeError.focus();
+  mensajeError.hidden = true;
+  listaErrores.replaceChildren();
+};
+
+const mostrarErroresRegistro = (errores) => {
+  const mensajeError = document.getElementById("mensaje-error");
+  const listaErrores = document.getElementById("lista-errores");
+
+  if (!mensajeError || !listaErrores) {
+    return;
+  }
+
+  listaErrores.replaceChildren();
+  errores.forEach((mensaje) => {
+    const elementoError = document.createElement("li");
+    elementoError.textContent = mensaje;
+    listaErrores.append(elementoError);
+  });
+  mensajeError.hidden = errores.length === 0;
+
+  if (errores.length > 0) {
+    mensajeError.focus();
+  }
+};
+
+const mostrarErrorRegistro = (mensaje) => {
+  mostrarErroresRegistro([mensaje]);
+};
+
+const obtenerErrorCampo = (campo) => {
+  const valor = campo.value.trim();
+
+  if (campo.id === "nombre" && valor.length < 3) {
+    return valor.length === 0
+      ? "Ingresa tu nombre completo."
+      : "El nombre debe tener al menos 3 caracteres.";
+  }
+
+  if (campo.id === "edad") {
+    if (campo.validity.badInput) {
+      return "Ingresa una edad entera entre 0 y 120 años.";
+    }
+
+    if (valor.length === 0) {
+      return "Ingresa tu edad.";
+    }
+
+    const edad = Number(valor);
+
+    if (
+      !Number.isInteger(edad) ||
+      edad < 0 ||
+      edad > 120
+    ) {
+      return "Ingresa una edad entera entre 0 y 120 años.";
+    }
+
+    if (edad < 18) {
+      return "Debes tener 18 años o más para registrarte.";
+    }
+  }
+
+  if (campo.id === "email") {
+    if (valor.length === 0) {
+      return "Ingresa tu correo electrónico.";
+    }
+
+    if (campo.validity.typeMismatch) {
+      return "Ingresa un correo electrónico válido.";
+    }
+  }
+
+  if (campo.id === "password") {
+    if (campo.value.length === 0) {
+      return "Ingresa una contraseña.";
+    }
+
+    if (campo.value.length < 8) {
+      return "La contraseña debe tener al menos 8 caracteres.";
+    }
+  }
+
+  if (campo.id === "confirmarPassword") {
+    if (campo.value.length === 0) {
+      return "Confirma tu contraseña.";
+    }
+
+    if (campo.value !== entradaContraseña.value) {
+      return "Las contraseñas no coinciden.";
+    }
+  }
+
+  return "";
+};
+
+const actualizarErrorCampo = (campoRegistro, mensaje) => {
+  campoRegistro.mensaje.textContent = mensaje;
+  campoRegistro.mensaje.hidden = mensaje.length === 0;
+  campoRegistro.elemento.setAttribute(
+    "aria-invalid",
+    mensaje.length > 0 ? "true" : "false"
+  );
+};
+
+const obtenerErrorCorreoDuplicado = (correo, usuarios) => {
+  const correoNormalizado = correo.trim().toLowerCase();
+  const correoExiste = usuarios.some(
+    (usuario) => usuario.email.toLowerCase() === correoNormalizado
+  );
+
+  return correoExiste ? "Este correo electrónico ya está en uso." : "";
 };
 
 const obtenerUsuarios = () => {
@@ -86,60 +224,49 @@ const registrarUsuario = (evento) => {
 
   const nombre = entradaNombre.value.trim();
   const correo = entradaCorreo.value.trim().toLowerCase();
-  const edadIngresada = entradaEdad.value.trim();
-  const edad = Number(edadIngresada);
+  const edad = Number(entradaEdad.value.trim());
   const contraseña = entradaContraseña.value;
-  const confirmarContraseña = entradaConfirmarContraseña.value;
-  const mensajeError = document.getElementById("mensaje-error");
+  const errores = [];
 
-  mensajeError.textContent = "";
+  camposRegistro.forEach((campoRegistro) => {
+    camposTocados.add(campoRegistro.elemento.id);
+    const mensaje = obtenerErrorCampo(campoRegistro.elemento);
+    actualizarErrorCampo(campoRegistro, mensaje);
 
-  if (nombre.length < 3) {
-    mostrarErrorRegistro("El nombre debe tener al menos 3 caracteres.");
-    return;
-  }
-
-  if (
-    edadIngresada === "" ||
-    !Number.isInteger(edad) ||
-    edad < 0 ||
-    edad > 120
-  ) {
-    mostrarErrorRegistro("Ingresa una edad válida entre 0 y 120 años.");
-    return;
-  }
-
-  if (edad < 18) {
-    mostrarErrorRegistro("Debes tener 18 años o más para registrarte.");
-    return;
-  }
-
-  if (contraseña.length < 8) {
-    mostrarErrorRegistro("La contraseña debe tener al menos 8 caracteres.");
-    return;
-  }
-
-  if (contraseña !== confirmarContraseña) {
-    mostrarErrorRegistro("Las contraseñas no coinciden.");
-    return;
-  }
+    if (mensaje) {
+      errores.push(`${campoRegistro.etiqueta}: ${mensaje}`);
+    }
+  });
 
   const resultadoUsuarios = obtenerUsuarios();
 
   if (resultadoUsuarios.error) {
-    mostrarErrorRegistro(resultadoUsuarios.error);
+    errores.push(resultadoUsuarios.error);
+  }
+
+  if (!resultadoUsuarios.error && !obtenerErrorCampo(entradaCorreo)) {
+    const errorCorreoDuplicado = obtenerErrorCorreoDuplicado(
+      correo,
+      resultadoUsuarios.usuarios
+    );
+
+    if (errorCorreoDuplicado) {
+      actualizarErrorCampo(
+        camposRegistro.find(
+          (campoRegistro) => campoRegistro.elemento === entradaCorreo
+        ),
+        errorCorreoDuplicado
+      );
+      errores.push(`Correo electrónico: ${errorCorreoDuplicado}`);
+    }
+  }
+
+  if (errores.length > 0) {
+    mostrarErroresRegistro(errores);
     return;
   }
 
   const usuarios = resultadoUsuarios.usuarios;
-  const correoExiste = usuarios.some(
-    (usuario) => usuario.email.toLowerCase() === correo
-  );
-
-  if (correoExiste) {
-    mostrarErrorRegistro("Este correo electrónico ya está en uso.");
-    return;
-  }
 
   const usuarioNuevo = { nombre, email: correo, edad };
   const usuariosActualizados = [...usuarios, usuarioNuevo];
@@ -181,6 +308,55 @@ const registrarUsuario = (evento) => {
 
 if (formularioRegistro) {
   formularioRegistro.addEventListener("submit", registrarUsuario);
+
+  camposRegistro.forEach((campoRegistro) => {
+    const campo = campoRegistro.elemento;
+
+    campo.addEventListener("input", () => {
+      ocultarResumenErrores();
+
+      if (campo === entradaEdad) {
+        camposTocados.add(campo.id);
+      }
+
+      if (camposTocados.has(campo.id)) {
+        actualizarErrorCampo(campoRegistro, obtenerErrorCampo(campo));
+      }
+
+      if (
+        campo === entradaContraseña &&
+        camposTocados.has(entradaConfirmarContraseña.id)
+      ) {
+        actualizarErrorCampo(
+          camposRegistro.find(
+            (registro) => registro.elemento === entradaConfirmarContraseña
+          ),
+          obtenerErrorCampo(entradaConfirmarContraseña)
+        );
+      }
+    });
+
+    campo.addEventListener("blur", () => {
+      camposTocados.add(campo.id);
+      actualizarErrorCampo(campoRegistro, obtenerErrorCampo(campo));
+
+      if (campo !== entradaCorreo || obtenerErrorCampo(entradaCorreo)) {
+        return;
+      }
+
+      const resultadoUsuarios = obtenerUsuarios();
+
+      if (resultadoUsuarios.error) {
+        actualizarErrorCampo(campoRegistro, resultadoUsuarios.error);
+        return;
+      }
+
+      actualizarErrorCampo(
+        campoRegistro,
+        obtenerErrorCorreoDuplicado(campo.value, resultadoUsuarios.usuarios)
+      );
+    });
+  });
 }
 
 const validarRegistro = () => {

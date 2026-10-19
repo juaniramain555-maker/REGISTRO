@@ -170,8 +170,20 @@ a {
   line-height: 1.5;
 }
 
-.mensaje-error:empty {
-  display: none;
+.mensaje-error p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.mensaje-error ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.mensaje-campo-error {
+  color: var(--color-error);
+  font-size: 0.8rem;
+  line-height: 1.5;
 }
 
 .mensaje-estado {
@@ -226,6 +238,10 @@ a {
   box-shadow: 0 0 0 3px rgb(239 35 60 / 18%);
 }
 
+.entrada[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
 .boton {
   display: inline-flex;
   justify-content: center;
@@ -244,7 +260,6 @@ a {
 }
 
 .boton:focus-visible,
-.enlace-secundario:focus-visible,
 .marca:focus-visible {
   outline: 3px solid var(--color-acento);
   outline-offset: 3px;
@@ -287,18 +302,6 @@ a {
   margin: 0;
   color: var(--color-texto-secundario);
   font-size: 0.875rem;
-}
-
-.enlace-secundario {
-  color: var(--color-acento-hover);
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-}
-
-.enlace-secundario:hover {
-  color: var(--color-texto);
 }
 
 .tarjeta-bienvenida {
