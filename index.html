@@ -71,13 +71,12 @@
               <label class="etiqueta-campo" for="edad">Edad</label>
               <input
                 class="entrada"
-                type="number"
+                type="text"
                 id="edad"
                 name="edad"
                 placeholder="Ej. 25"
-                min="0"
-                max="120"
                 inputmode="numeric"
+                pattern="[0-9]*"
                 aria-describedby="error-edad"
                 required
               />

@@ -82,10 +82,6 @@ const obtenerErrorCampo = (campo) => {
   }
 
   if (campo.id === "edad") {
-    if (campo.validity.badInput) {
-      return "Ingresa una edad entera entre 0 y 120 años.";
-    }
-
     if (valor.length === 0) {
       return "Ingresa tu edad.";
     }
@@ -313,6 +309,21 @@ if (formularioRegistro) {
     const campo = campoRegistro.elemento;
 
     campo.addEventListener("input", () => {
+      if (campo === entradaEdad) {
+        const posicion = campo.selectionStart ?? campo.value.length;
+        const caracteresAntesDelCursor = campo.value.slice(0, posicion);
+        const edadSoloDigitos = campo.value.replace(/\D/g, "");
+
+        if (campo.value !== edadSoloDigitos) {
+          const caracteresEliminados =
+            caracteresAntesDelCursor.length -
+            caracteresAntesDelCursor.replace(/\D/g, "").length;
+          campo.value = edadSoloDigitos;
+          const nuevaPosicion = posicion - caracteresEliminados;
+          campo.setSelectionRange(nuevaPosicion, nuevaPosicion);
+        }
+      }
+
       ocultarResumenErrores();
 
       if (campo === entradaEdad) {
